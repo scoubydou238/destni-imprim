@@ -113,6 +113,40 @@
 
       <label for="details">Détails de la commande :</label>
       <textarea id="details" name="details" rows="5" required></textarea>
+      <button id="payBtn">Payer avec CinetPay</button>
+
+<script src="https://cdn.cinetpay.com/seamless/main.js"></script>
+<script>
+    document.getElementById("payBtn").addEventListener("click", function () {
+        CinetPay.setConfig({
+            apikey: "10868348836821d72c7cc3a3.57915777",
+            site_id: "105894853",
+            notify_url: "https://example.com/notify", // tu peux laisser comme ça si tu n’as pas de backend
+            mode: "PRODUCTION"
+        });
+
+        CinetPay.getCheckout({
+            transaction_id: Math.floor(Math.random() * 100000000).toString(),
+            amount: "1000",
+            currency: "XOF",
+            channels: "ALL",
+            description: "Paiement DESTINI-IMPRIM"
+        });
+
+        CinetPay.waitResponse(function(data) {
+            if (data.status === "REFUSED") {
+                alert("Paiement refusé");
+            }
+            if (data.status === "ACCEPTED") {
+                alert("Paiement accepté !");
+            }
+        });
+
+        CinetPay.onError(function(data) {
+            alert("Erreur : " + data.message);
+        });
+    });
+</script>
 
       <button type="submit">Envoyer la commande</button>
     </form>
